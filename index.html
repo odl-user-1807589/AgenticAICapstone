@@ -1,153 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Test Web App</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #4CAF50;
-      color: white;
-      padding: 20px;
-    }
-    main {
-      margin: 20px auto;
-      max-width: 600px;
-    }
-    .question {
-      display: none;
-      margin-top: 20px;
-    }
-    .results {
-      display: none;
-      margin-top: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f9;
+        }
+        nav {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1, p {
+            text-align: center;
+        }
+        input[type="number"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f3e7;
+            color: #4CAF50;
+            text-align: center;
+            border-radius: 5px;
+            display: none;
+        }
+        .error {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fdecea;
+            color: #d9534f;
+            text-align: center;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#test">Test App</a>
+    </nav>
 
-  <header>
-    <h1>Simple Test Web App</h1>
-    <p>Take a quick test and view your results!</p>
-  </header>
-
-  <main>
-    <!-- Landing Page -->
-    <div id="landing-page">
-      <p>Welcome to the Simple Test Web App! Click below to start the test.</p>
-      <button id="start-test">Start Test</button>
+    <div class="container" id="home">
+        <h1>Welcome to the Simple Test Web App</h1>
+        <p>This application allows you to test a simple operation: calculate the square of a number. Navigate to the form below to try it out!</p>
     </div>
 
-    <!-- Test Page -->
-    <div id="test-page" class="hidden">
-      <div class="question" id="question-1">
-        <p>Question 1: What is the capital of France?</p>
-        <button data-answer="correct">Paris</button>
-        <button data-answer="wrong">Madrid</button>
-      </div>
-
-      <div class="question" id="question-2">
-        <p>Question 2: 5 + 3 = ?</p>
-        <button data-answer="correct">8</button>
-        <button data-answer="wrong">6</button>
-      </div>
-
-      <div class="question" id="question-3">
-        <p>Question 3: Is JavaScript a programming language?</p>
-        <button data-answer="correct">True</button>
-        <button data-answer="wrong">False</button>
-      </div>
-      <button id="submit-test" class="hidden">Submit Test</button>
+    <div class="container" id="test">
+        <h2>Test a Number</h2>
+        <form id="testForm">
+            <label for="numberInput">Enter a number:</label>
+            <input type="number" id="numberInput" placeholder="Enter a number" required>
+            <button type="submit">Calculate Square</button>
+        </form>
+        <div id="output" class="result"></div>
+        <div id="error" class="error"></div>
     </div>
 
-    <!-- Results Page -->
-    <div id="results-page" class="hidden">
-      <p id="results-message"></p>
-      <button id="retry-test">Retry Test</button>
-    </div>
-  </main>
+    <script>
+        // Reference form and output elements
+        const testForm = document.getElementById("testForm");
+        const numberInput = document.getElementById("numberInput");
+        const outputDiv = document.getElementById("output");
+        const errorDiv = document.getElementById("error");
 
-  <script>
-    // JavaScript logic
-    const startButton = document.getElementById('start-test');
-    const testPage = document.getElementById('test-page');
-    const landingPage = document.getElementById('landing-page');
-    const questions = document.querySelectorAll('.question');
-    const resultsPage = document.getElementById('results-page');
-    const resultsMessage = document.getElementById('results-message');
-    const retryButton = document.getElementById('retry-test');
-    const submitButton = document.getElementById('submit-test');
+        // Event listener for form submission
+        testForm.addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent page refresh
 
-    let currentQuestion = 0;
-    let score = 0;
+            const number = numberInput.value;
 
-    // Start Test
-    startButton.addEventListener('click', () => {
-      landingPage.classList.add('hidden');
-      testPage.classList.remove('hidden');
-      showQuestion(currentQuestion);
-    });
+            // Validate the input
+            if (!number || isNaN(number)) {
+                outputDiv.style.display = "none";
+                errorDiv.style.display = "block";
+                errorDiv.textContent = "Please enter a valid number.";
+            } else {
+                // Perform the calculation
+                const square = number * number;
 
-    // Show current question
-    function showQuestion(index) {
-      questions.forEach(q => q.style.display = 'none');
-      questions[index].style.display = 'block';
-
-      if (index === questions.length - 1) {
-        submitButton.classList.remove('hidden');
-      } else {
-        submitButton.classList.add('hidden');
-      }
-    }
-
-    // Add event listeners to answer buttons
-    questions.forEach((question, index) => {
-      const answers = question.querySelectorAll('button');
-      answers.forEach(answerButton => {
-        answerButton.addEventListener('click', () => {
-          const answer = answerButton.getAttribute('data-answer');
-          if (answer === 'correct') {
-            score++;
-          }
-          if (index < questions.length - 1) {
-            currentQuestion++;
-            showQuestion(currentQuestion);
-          }
+                // Display the result
+                errorDiv.style.display = "none";
+                outputDiv.style.display = "block";
+                outputDiv.textContent = `The square of ${number} is ${square}.`;
+            }
         });
-      });
-    });
-
-    // Submit Test
-    submitButton.addEventListener('click', () => {
-      testPage.classList.add('hidden');
-      resultsPage.classList.remove('hidden');
-      resultsMessage.textContent = `You scored ${score} out of ${questions.length}!`;
-    });
-
-    // Retry Test
-    retryButton.addEventListener('click', () => {
-      score = 0;
-      currentQuestion = 0;
-      resultsPage.classList.add('hidden');
-      testPage.classList.remove('hidden');
-      showQuestion(currentQuestion);
-    });
-  </script>
-
+    </script>
 </body>
 </html>

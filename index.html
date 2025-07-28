@@ -1,151 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Test Web App</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    header {
-      background-color: #007bff;
-      color: white;
-      padding: 1rem 0;
-      text-align: center;
-    }
-    main {
-      margin: 2rem;
-    }
-    .form-container {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    .form-container label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-    .form-container input {
-      width: calc(100% - 1rem);
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    .form-container button {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.75rem;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .form-container button:hover {
-      background-color: #0056b3;
-    }
-    .results-container {
-      margin-top: 2rem;
-    }
-    .results-container table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .results-container th,
-    .results-container td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-    .results-container th {
-      background-color: #007bff;
-      color: white;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #444;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .question {
+            margin: 20px 0;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Simple Test Web App</h1>
-  </header>
 
-  <main>
-    <section class="form-container">
-      <h2>Input Form</h2>
-      <form id="testForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" placeholder="Enter your name" required>
-        <label for="email">Email:</label>
-        <input type="email" id="email" placeholder="Enter your email" required>
-        <label for="age">Age:</label>
-        <input type="number" id="age" placeholder="Enter your age" required>
-        <button type="submit">Submit</button>
-      </form>
-    </section>
+    <div id="start-screen" class="container">
+        <h1>Welcome to the Test!</h1>
+        <p>Click the button below to start.</p>
+        <button onclick="startTest()">Start Test</button>
+    </div>
 
-    <section class="results-container">
-      <h2>Submitted Responses</h2>
-      <table id="resultsTable">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Age</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Submissions will be dynamically added here -->
-        </tbody>
-      </table>
-    </section>
-  </main>
+    <div id="test-screen" class="container hidden">
+        <div id="question-container">
+            <h2 class="question" id="question-title"></h2>
+            <div id="choices-container"></div>
+        </div>
+        <button onclick="submitAnswer()">Next</button>
+    </div>
 
-  <script>
-    const form = document.querySelector('#testForm');
-    const resultsTableBody = document.querySelector('#resultsTable tbody');
+    <div id="result-screen" class="container hidden">
+        <h1>Test Results</h1>
+        <p id="score"></p>
+        <button onclick="restartTest()">Restart Test</button>
+    </div>
 
-    // Array to hold responses
-    const responses = [];
+    <script>
+        const questions = [
+            {
+                question: "What is 2 + 2?",
+                choices: ["3", "4", "5"],
+                correct: 1
+            },
+            {
+                question: "What is the capital of France?",
+                choices: ["Berlin", "Paris", "Madrid"],
+                correct: 1
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                choices: ["Earth", "Mars", "Jupiter"],
+                correct: 1
+            }
+        ];
 
-    // Function to render the responses in the table
-    function renderResponses() {
-      resultsTableBody.innerHTML = ''; // Clear the table before updating
-      responses.forEach((response, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${response.name}</td>
-          <td>${response.email}</td>
-          <td>${response.age}</td>
-        `;
-        resultsTableBody.appendChild(row);
-      });
-    }
+        let currentQuestionIndex = 0;
+        let score = 0;
 
-    // Form submission event listener
-    form.addEventListener('submit', (event) => {
-      event.preventDefault(); // Prevent page reload
-      const name = document.querySelector('#name').value;
-      const email = document.querySelector('#email').value;
-      const age = document.querySelector('#age').value;
+        const startScreen = document.getElementById('start-screen');
+        const testScreen = document.getElementById('test-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const questionTitle = document.getElementById('question-title');
+        const choicesContainer = document.getElementById('choices-container');
+        const scoreDisplay = document.getElementById('score');
 
-      if (name && email && age) {
-        // Store the response
-        responses.push({ name, email, age });
-        // Render the updated responses
-        renderResponses();
+        function startTest() {
+            startScreen.classList.add('hidden');
+            testScreen.classList.remove('hidden');
+            loadQuestion();
+        }
 
-        // Optional: Clear form inputs after submission
-        form.reset();
-      } else {
-        alert('Please fill out all the fields!');
-      }
-    });
-  </script>
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionTitle.textContent = currentQuestion.question;
+
+            choicesContainer.innerHTML = '';
+            currentQuestion.choices.forEach((choice, index) => {
+                const choiceElement = document.createElement('div');
+                choiceElement.innerHTML = `
+                    <label>
+                        <input type="radio" name="choice" value="${index}">
+                        ${choice}
+                    </label>
+                `;
+                choicesContainer.appendChild(choiceElement);
+            });
+        }
+
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="choice"]:checked');
+            if (!selectedAnswer) {
+                alert('Please select an answer!');
+                return;
+            }
+
+            const answerValue = parseInt(selectedAnswer.value);
+            if (answerValue === questions[currentQuestionIndex].correct) {
+                score++;
+            }
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            testScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            scoreDisplay.textContent = `Your score is ${score} out of ${questions.length}.`;
+        }
+
+        function restartTest() {
+            currentQuestionIndex = 0;
+            score = 0;
+            resultScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+        }
+    </script>
+
 </body>
 </html>

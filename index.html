@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple To-Do List</title>
+</head>
+<body>
+  <h1>To-Do List</h1>
+
+  <!-- Input and Button for Adding Tasks -->
+  <input type="text" id="taskInput" placeholder="Enter a new task">
+  <button id="addTaskButton">Add Task</button>
+
+  <!-- Container for Task List -->
+  <ul id="taskList"></ul>
+
+  <script>
+    // JavaScript Code
+    // Select DOM elements
+    const taskInput = document.getElementById('taskInput');
+    const addTaskButton = document.getElementById('addTaskButton');
+    const taskList = document.getElementById('taskList');
+
+    // Add event listener to the Add Task button
+    addTaskButton.addEventListener('click', function() {
+      const taskText = taskInput.value.trim();
+
+      // If input is empty, do nothing
+      if (taskText === '') return;
+
+      // Create a new list item (<li>)
+      const listItem = document.createElement('li');
+      listItem.textContent = taskText;
+
+      // Create Remove button for the task
+      const removeButton = document.createElement('button');
+      removeButton.textContent = 'Remove';
+
+      // Add functionality to remove task on button click
+      removeButton.addEventListener('click', function() {
+        taskList.removeChild(listItem);
+      });
+
+      // Add the Remove button to the list item
+      listItem.appendChild(removeButton);
+
+      // Add the new list item to the task list
+      taskList.appendChild(listItem);
+
+      // Clear the input field for a new task
+      taskInput.value = '';
+    });
+  </script>
+</body>
+</html>

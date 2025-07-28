@@ -1,113 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Test Web App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #007bff;
-            color: #fff;
-            padding: 1rem;
-            width: 100%;
-            text-align: center;
-        }
-        form {
-            background: #ffffff;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        form div {
-            margin-bottom: 1rem;
-        }
-        input[type="text"],
-        input[type="number"] {
-            width: 100%;
-            padding: 0.5rem;
-            margin: 0.5rem 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button[type="submit"] {
-            background-color: #007bff;
-            color: white;
-        }
-        button[type="reset"] {
-            background-color: #6c757d;
-            color: white;
-            margin-left: 10px;
-        }
-        .results {
-            margin-top: 20px;
-            font-size: 1.2rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Test Web App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 24px;
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: 0.2s ease;
+    }
+
+    input:focus {
+      border-color: #00bcd4;
+    }
+
+    button {
+      background-color: #00bcd4;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #008c9e;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #e2f7fc;
+      border: 1px solid #b3ebf7;
+      border-radius: 4px;
+      color: #005f6b;
+      font-size: 16px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-
-<header>
+  <div class="app-container">
     <h1>Simple Test Web App</h1>
-</header>
-
-<main>
-    <form id="test-form">
-        <div>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" placeholder="Enter your name" required>
-        </div>
-        <div>
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" placeholder="Enter your age" required>
-        </div>
-        <button type="submit">Submit</button>
-        <button type="reset">Reset</button>
+    <form id="testForm">
+      <label for="nameInput">Enter your name:</label>
+      <input type="text" id="nameInput" placeholder="Your name" required>
+      <button type="submit">Test</button>
+      <button type="button" id="resetButton">Reset</button>
     </form>
-    <div class="results" id="results"></div>
-</main>
+    <div id="resultContainer" class="result" style="display: none;"></div>
+  </div>
 
-<script>
-    document.getElementById('test-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent page reload
+  <script>
+    const testForm = document.getElementById('testForm');
+    const nameInput = document.getElementById('nameInput');
+    const resultContainer = document.getElementById('resultContainer');
+    const resetButton = document.getElementById('resetButton');
 
-        const name = document.getElementById('name').value;
-        const age = document.getElementById('age').value;
-        const resultsDiv = document.getElementById('results');
+    // Handle form submission
+    testForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      
+      const name = nameInput.value.trim();
+      if (name === '') {
+        alert('Please enter a valid name!');
+        return;
+      }
 
-        // Validate inputs
-        if (!name || !age) {
-            resultsDiv.textContent = "Please fill in all fields.";
-            resultsDiv.style.color = "red";
-            return;
-        }
-
-        // Display results
-        resultsDiv.textContent = `Hello, ${name}! You are ${age} years old.`;
-        resultsDiv.style.color = "green";
+      const resultMessage = `Hello, ${name}! Welcome to the test app.`;
+      resultContainer.textContent = resultMessage;
+      resultContainer.style.display = 'block';
     });
 
-    document.getElementById('test-form').addEventListener('reset', function() {
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.textContent = ""; // Clear results
+    // Handle reset functionality
+    resetButton.addEventListener('click', () => {
+      nameInput.value = '';
+      resultContainer.style.display = 'none';
     });
-</script>
-
+  </script>
 </body>
 </html>

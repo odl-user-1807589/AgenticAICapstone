@@ -1,130 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Test Web App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #f4f4f9;
-        }
-        nav {
-            background-color: #4CAF50;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
-            font-weight: bold;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        h1, p {
-            text-align: center;
-        }
-        input[type="number"], button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e7f3e7;
-            color: #4CAF50;
-            text-align: center;
-            border-radius: 5px;
-            display: none;
-        }
-        .error {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #fdecea;
-            color: #d9534f;
-            text-align: center;
-            border-radius: 5px;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Test Web App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .form-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      font-weight: bold;
+    }
+    input, button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .output-container {
+      margin-top: 20px;
+      background: #e8ffe8;
+      padding: 15px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#test">Test App</a>
-    </nav>
-
-    <div class="container" id="home">
-        <h1>Welcome to the Simple Test Web App</h1>
-        <p>This application allows you to test a simple operation: calculate the square of a number. Navigate to the form below to try it out!</p>
+  <div id="app">
+    <h1>Simple Test Web App</h1>
+    <div class="form-container">
+      <label for="test-input">Enter some text:</label>
+      <input type="text" id="test-input" placeholder="Type something here..." />
+      <button id="submit-button">Submit</button>
     </div>
-
-    <div class="container" id="test">
-        <h2>Test a Number</h2>
-        <form id="testForm">
-            <label for="numberInput">Enter a number:</label>
-            <input type="number" id="numberInput" placeholder="Enter a number" required>
-            <button type="submit">Calculate Square</button>
-        </form>
-        <div id="output" class="result"></div>
-        <div id="error" class="error"></div>
+    <div id="output-container" class="output-container" style="display:none;">
+      <h3 id="success-message">Data successfully submitted!</h3>
+      <p id="output-data"></p>
     </div>
+  </div>
 
-    <script>
-        // Reference form and output elements
-        const testForm = document.getElementById("testForm");
-        const numberInput = document.getElementById("numberInput");
-        const outputDiv = document.getElementById("output");
-        const errorDiv = document.getElementById("error");
+  <script>
+    // Handle submit button click
+    document.getElementById('submit-button').addEventListener('click', function() {
+      const inputField = document.getElementById('test-input');
+      const outputContainer = document.getElementById('output-container');
+      const outputData = document.getElementById('output-data');
+      const successMessage = document.getElementById('success-message');
 
-        // Event listener for form submission
-        testForm.addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent page refresh
+      // Retrieve the input value
+      const inputValue = inputField.value.trim();
 
-            const number = numberInput.value;
+      // Validate the input
+      if (inputValue === '') {
+        alert('Please enter some text!');
+        return;
+      }
 
-            // Validate the input
-            if (!number || isNaN(number)) {
-                outputDiv.style.display = "none";
-                errorDiv.style.display = "block";
-                errorDiv.textContent = "Please enter a valid number.";
-            } else {
-                // Perform the calculation
-                const square = number * number;
+      // Display the output container and success message
+      outputData.textContent = `You entered: ${inputValue}`;
+      successMessage.style.display = 'block';
+      outputContainer.style.display = 'block';
 
-                // Display the result
-                errorDiv.style.display = "none";
-                outputDiv.style.display = "block";
-                outputDiv.textContent = `The square of ${number} is ${square}.`;
-            }
-        });
-    </script>
+      // Clear the input field
+      inputField.value = '';
+    });
+  </script>
 </body>
 </html>

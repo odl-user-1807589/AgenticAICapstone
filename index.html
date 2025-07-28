@@ -1,56 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple To-Do List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+        form {
+            background: #ffffff;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        form div {
+            margin-bottom: 1rem;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+        }
+        button[type="reset"] {
+            background-color: #6c757d;
+            color: white;
+            margin-left: 10px;
+        }
+        .results {
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+    </style>
 </head>
 <body>
-  <h1>To-Do List</h1>
 
-  <!-- Input and Button for Adding Tasks -->
-  <input type="text" id="taskInput" placeholder="Enter a new task">
-  <button id="addTaskButton">Add Task</button>
+<header>
+    <h1>Simple Test Web App</h1>
+</header>
 
-  <!-- Container for Task List -->
-  <ul id="taskList"></ul>
+<main>
+    <form id="test-form">
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+        </div>
+        <div>
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" placeholder="Enter your age" required>
+        </div>
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+    </form>
+    <div class="results" id="results"></div>
+</main>
 
-  <script>
-    // JavaScript Code
-    // Select DOM elements
-    const taskInput = document.getElementById('taskInput');
-    const addTaskButton = document.getElementById('addTaskButton');
-    const taskList = document.getElementById('taskList');
+<script>
+    document.getElementById('test-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent page reload
 
-    // Add event listener to the Add Task button
-    addTaskButton.addEventListener('click', function() {
-      const taskText = taskInput.value.trim();
+        const name = document.getElementById('name').value;
+        const age = document.getElementById('age').value;
+        const resultsDiv = document.getElementById('results');
 
-      // If input is empty, do nothing
-      if (taskText === '') return;
+        // Validate inputs
+        if (!name || !age) {
+            resultsDiv.textContent = "Please fill in all fields.";
+            resultsDiv.style.color = "red";
+            return;
+        }
 
-      // Create a new list item (<li>)
-      const listItem = document.createElement('li');
-      listItem.textContent = taskText;
-
-      // Create Remove button for the task
-      const removeButton = document.createElement('button');
-      removeButton.textContent = 'Remove';
-
-      // Add functionality to remove task on button click
-      removeButton.addEventListener('click', function() {
-        taskList.removeChild(listItem);
-      });
-
-      // Add the Remove button to the list item
-      listItem.appendChild(removeButton);
-
-      // Add the new list item to the task list
-      taskList.appendChild(listItem);
-
-      // Clear the input field for a new task
-      taskInput.value = '';
+        // Display results
+        resultsDiv.textContent = `Hello, ${name}! You are ${age} years old.`;
+        resultsDiv.style.color = "green";
     });
-  </script>
+
+    document.getElementById('test-form').addEventListener('reset', function() {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.textContent = ""; // Clear results
+    });
+</script>
+
 </body>
 </html>

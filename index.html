@@ -7,112 +7,147 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      text-align: center;
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f4f4f9;
     }
-
-    .app-container {
-      width: 100%;
-      max-width: 400px;
-      padding: 20px;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-      font-size: 24px;
-      text-align: center;
-      color: #333;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    label {
-      font-weight: bold;
-    }
-
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      transition: 0.2s ease;
-    }
-
-    input:focus {
-      border-color: #00bcd4;
-    }
-
-    button {
-      background-color: #00bcd4;
+    header {
+      background-color: #4CAF50;
       color: white;
-      cursor: pointer;
+      padding: 20px;
     }
-
-    button:hover {
-      background-color: #008c9e;
+    main {
+      margin: 20px auto;
+      max-width: 600px;
     }
-
-    .result {
+    .question {
+      display: none;
       margin-top: 20px;
-      padding: 10px;
-      background-color: #e2f7fc;
-      border: 1px solid #b3ebf7;
-      border-radius: 4px;
-      color: #005f6b;
+    }
+    .results {
+      display: none;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
       font-size: 16px;
-      text-align: center;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="app-container">
+
+  <header>
     <h1>Simple Test Web App</h1>
-    <form id="testForm">
-      <label for="nameInput">Enter your name:</label>
-      <input type="text" id="nameInput" placeholder="Your name" required>
-      <button type="submit">Test</button>
-      <button type="button" id="resetButton">Reset</button>
-    </form>
-    <div id="resultContainer" class="result" style="display: none;"></div>
-  </div>
+    <p>Take a quick test and view your results!</p>
+  </header>
+
+  <main>
+    <!-- Landing Page -->
+    <div id="landing-page">
+      <p>Welcome to the Simple Test Web App! Click below to start the test.</p>
+      <button id="start-test">Start Test</button>
+    </div>
+
+    <!-- Test Page -->
+    <div id="test-page" class="hidden">
+      <div class="question" id="question-1">
+        <p>Question 1: What is the capital of France?</p>
+        <button data-answer="correct">Paris</button>
+        <button data-answer="wrong">Madrid</button>
+      </div>
+
+      <div class="question" id="question-2">
+        <p>Question 2: 5 + 3 = ?</p>
+        <button data-answer="correct">8</button>
+        <button data-answer="wrong">6</button>
+      </div>
+
+      <div class="question" id="question-3">
+        <p>Question 3: Is JavaScript a programming language?</p>
+        <button data-answer="correct">True</button>
+        <button data-answer="wrong">False</button>
+      </div>
+      <button id="submit-test" class="hidden">Submit Test</button>
+    </div>
+
+    <!-- Results Page -->
+    <div id="results-page" class="hidden">
+      <p id="results-message"></p>
+      <button id="retry-test">Retry Test</button>
+    </div>
+  </main>
 
   <script>
-    const testForm = document.getElementById('testForm');
-    const nameInput = document.getElementById('nameInput');
-    const resultContainer = document.getElementById('resultContainer');
-    const resetButton = document.getElementById('resetButton');
+    // JavaScript logic
+    const startButton = document.getElementById('start-test');
+    const testPage = document.getElementById('test-page');
+    const landingPage = document.getElementById('landing-page');
+    const questions = document.querySelectorAll('.question');
+    const resultsPage = document.getElementById('results-page');
+    const resultsMessage = document.getElementById('results-message');
+    const retryButton = document.getElementById('retry-test');
+    const submitButton = document.getElementById('submit-test');
 
-    // Handle form submission
-    testForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      
-      const name = nameInput.value.trim();
-      if (name === '') {
-        alert('Please enter a valid name!');
-        return;
-      }
+    let currentQuestion = 0;
+    let score = 0;
 
-      const resultMessage = `Hello, ${name}! Welcome to the test app.`;
-      resultContainer.textContent = resultMessage;
-      resultContainer.style.display = 'block';
+    // Start Test
+    startButton.addEventListener('click', () => {
+      landingPage.classList.add('hidden');
+      testPage.classList.remove('hidden');
+      showQuestion(currentQuestion);
     });
 
-    // Handle reset functionality
-    resetButton.addEventListener('click', () => {
-      nameInput.value = '';
-      resultContainer.style.display = 'none';
+    // Show current question
+    function showQuestion(index) {
+      questions.forEach(q => q.style.display = 'none');
+      questions[index].style.display = 'block';
+
+      if (index === questions.length - 1) {
+        submitButton.classList.remove('hidden');
+      } else {
+        submitButton.classList.add('hidden');
+      }
+    }
+
+    // Add event listeners to answer buttons
+    questions.forEach((question, index) => {
+      const answers = question.querySelectorAll('button');
+      answers.forEach(answerButton => {
+        answerButton.addEventListener('click', () => {
+          const answer = answerButton.getAttribute('data-answer');
+          if (answer === 'correct') {
+            score++;
+          }
+          if (index < questions.length - 1) {
+            currentQuestion++;
+            showQuestion(currentQuestion);
+          }
+        });
+      });
+    });
+
+    // Submit Test
+    submitButton.addEventListener('click', () => {
+      testPage.classList.add('hidden');
+      resultsPage.classList.remove('hidden');
+      resultsMessage.textContent = `You scored ${score} out of ${questions.length}!`;
+    });
+
+    // Retry Test
+    retryButton.addEventListener('click', () => {
+      score = 0;
+      currentQuestion = 0;
+      resultsPage.classList.add('hidden');
+      testPage.classList.remove('hidden');
+      showQuestion(currentQuestion);
     });
   </script>
+
 </body>
 </html>

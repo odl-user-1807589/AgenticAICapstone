@@ -1,177 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Test Webapp</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-      color: #333;
-    }
-    header {
-      background: #333;
-      color: #fff;
-      padding: 1rem 0;
-      text-align: center;
-    }
-    nav {
-      text-align: center;
-      margin: 1rem 0;
-    }
-    nav a {
-      text-decoration: none;
-      color: #333;
-      margin: 0 1rem;
-    }
-    nav a:hover {
-      color: #007BFF;
-    }
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      background: #fff;
-      padding: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    form {
-      margin-top: 1rem;
-    }
-    .form-group {
-      margin-bottom: 1rem;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    button {
-      background-color: #007BFF;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem 0;
-      background: #333;
-      color: #fff;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-    }
-    .confirmation {
-      margin-top: 1rem;
-      background-color: #dff0d8;
-      color: #3c763d;
-      padding: 1rem;
-      border-radius: 5px;
-    }
-    .error {
-      color: red;
-      margin-top: 0.5rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Simple Test Webapp</h1>
-    <p>A small web application for testing basic features.</p>
-  </header>
+    <div class="container">
+        <h1>Welcome to My Web App</h1>
+        <p>Please enter your name below:</p>
+        <input type="text" id="nameInput" placeholder="Your Name" />
+        <button onclick="displayGreeting()">Submit</button>
+        <p id="greetingMessage"></p>
+    </div>
 
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#contact-form">Contact</a>
-  </nav>
-
-  <div class="container">
-    <section id="home">
-      <h2>Welcome!</h2>
-      <p>This is a simple test web application to demonstrate basic web functionalities.</p>
-    </section>
-
-    <section id="contact-form">
-      <h2>Contact Us</h2>
-      <form id="testForm">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required>
-          <small class="error" id="nameError"></small>
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required>
-          <small class="error" id="emailError"></small>
-        </div>
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="5" required></textarea>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-      <div id="confirmationMessage" class="confirmation" style="display: none;">
-      </div>
-    </section>
-  </div>
-
-  <footer>
-    ©2023 Test Webapp
-  </footer>
-
-  <script>
-    const form = document.getElementById('testForm');
-    const confirmationMessage = document.getElementById('confirmationMessage');
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault(); // Prevent the default form submission
-
-      // Clear previous errors
-      document.getElementById('nameError').textContent = '';
-      document.getElementById('emailError').textContent = '';
-
-      // Validate fields
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const message = document.getElementById('message').value.trim();
-      let valid = true;
-
-      if (!name) {
-        document.getElementById('nameError').textContent = 'Name is required.';
-        valid = false;
-      }
-
-      if (!email || !/\S+@\S+\.\S+/.test(email)) {
-        document.getElementById('emailError').textContent = 'Valid email is required.';
-        valid = false;
-      }
-
-      if (valid) {
-        // Hide form and show confirmation message
-        confirmationMessage.style.display = 'block';
-        confirmationMessage.innerHTML = `
-          <p>Thank you for submitting the form!</p>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Message:</strong> ${message}</p>
-        `;
-        form.reset();
-      }
-    });
-  </script>
+    <script>
+        function displayGreeting() {
+            const name = document.getElementById('nameInput').value.trim();
+            const greetingMessage = document.getElementById('greetingMessage');
+            
+            if (name) {
+                greetingMessage.textContent = `Hello, ${name}! Welcome to my web app!`;
+            } else {
+                greetingMessage.textContent = 'Please enter a valid name.';
+            }
+        }
+    </script>
 </body>
 </html>

@@ -3,92 +3,174 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Test Web App</title>
+  <title>Simple Test Webapp</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
     }
-    h1 {
-      margin-bottom: 20px;
+    header {
+      background: #333;
+      color: #fff;
+      padding: 1rem 0;
+      text-align: center;
     }
-    .form-container {
+    nav {
+      text-align: center;
+      margin: 1rem 0;
+    }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin: 0 1rem;
+    }
+    nav a:hover {
+      color: #007BFF;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
       background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    form {
+      margin-top: 1rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
     }
     label {
+      display: block;
+      margin-bottom: 0.5rem;
       font-weight: bold;
     }
-    input, button {
-      margin-top: 10px;
+    input, textarea {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
     }
     button {
       background-color: #007BFF;
-      color: white;
-      font-weight: bold;
+      color: #fff;
+      border: none;
       cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
     }
     button:hover {
       background-color: #0056b3;
     }
-    .output-container {
-      margin-top: 20px;
-      background: #e8ffe8;
-      padding: 15px;
-      border-radius: 8px;
+    footer {
+      text-align: center;
+      padding: 1rem 0;
+      background: #333;
+      color: #fff;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+    .confirmation {
+      margin-top: 1rem;
+      background-color: #dff0d8;
+      color: #3c763d;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+    .error {
+      color: red;
+      margin-top: 0.5rem;
     }
   </style>
 </head>
 <body>
-  <div id="app">
-    <h1>Simple Test Web App</h1>
-    <div class="form-container">
-      <label for="test-input">Enter some text:</label>
-      <input type="text" id="test-input" placeholder="Type something here..." />
-      <button id="submit-button">Submit</button>
-    </div>
-    <div id="output-container" class="output-container" style="display:none;">
-      <h3 id="success-message">Data successfully submitted!</h3>
-      <p id="output-data"></p>
-    </div>
+  <header>
+    <h1>Simple Test Webapp</h1>
+    <p>A small web application for testing basic features.</p>
+  </header>
+
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#contact-form">Contact</a>
+  </nav>
+
+  <div class="container">
+    <section id="home">
+      <h2>Welcome!</h2>
+      <p>This is a simple test web application to demonstrate basic web functionalities.</p>
+    </section>
+
+    <section id="contact-form">
+      <h2>Contact Us</h2>
+      <form id="testForm">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required>
+          <small class="error" id="nameError"></small>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+          <small class="error" id="emailError"></small>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+      <div id="confirmationMessage" class="confirmation" style="display: none;">
+      </div>
+    </section>
   </div>
 
+  <footer>
+    ©2023 Test Webapp
+  </footer>
+
   <script>
-    // Handle submit button click
-    document.getElementById('submit-button').addEventListener('click', function() {
-      const inputField = document.getElementById('test-input');
-      const outputContainer = document.getElementById('output-container');
-      const outputData = document.getElementById('output-data');
-      const successMessage = document.getElementById('success-message');
+    const form = document.getElementById('testForm');
+    const confirmationMessage = document.getElementById('confirmationMessage');
 
-      // Retrieve the input value
-      const inputValue = inputField.value.trim();
+    form.addEventListener('submit', function(e) {
+      e.preventDefault(); // Prevent the default form submission
 
-      // Validate the input
-      if (inputValue === '') {
-        alert('Please enter some text!');
-        return;
+      // Clear previous errors
+      document.getElementById('nameError').textContent = '';
+      document.getElementById('emailError').textContent = '';
+
+      // Validate fields
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+      let valid = true;
+
+      if (!name) {
+        document.getElementById('nameError').textContent = 'Name is required.';
+        valid = false;
       }
 
-      // Display the output container and success message
-      outputData.textContent = `You entered: ${inputValue}`;
-      successMessage.style.display = 'block';
-      outputContainer.style.display = 'block';
+      if (!email || !/\S+@\S+\.\S+/.test(email)) {
+        document.getElementById('emailError').textContent = 'Valid email is required.';
+        valid = false;
+      }
 
-      // Clear the input field
-      inputField.value = '';
+      if (valid) {
+        // Hide form and show confirmation message
+        confirmationMessage.style.display = 'block';
+        confirmationMessage.innerHTML = `
+          <p>Thank you for submitting the form!</p>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Message:</strong> ${message}</p>
+        `;
+        form.reset();
+      }
     });
   </script>
 </body>
